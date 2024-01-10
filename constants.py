@@ -1,0 +1,4 @@
+
+SAVE_FILE_TITLE = "save.txt"
+TABLE_COLS = 4
+ENTITIES_PER_PAGE = 5
