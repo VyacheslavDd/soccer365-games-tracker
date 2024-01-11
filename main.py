@@ -1,5 +1,5 @@
 import flet
-import table_view, set_loader, add_game_view, save_load_view
+import table_view, add_game_view, save_load_view
 
 
 def define_page_settings(page):
@@ -8,11 +8,10 @@ def define_page_settings(page):
 
 def app(page: flet.Page):
     define_page_settings(page)
-    data = set_loader.Loader.load_set()
-    games = data[1]
-    table_container = table_view.TableContainer(page, data)
+    table_container = table_view.TableContainer(page, list())
     add_game_component = add_game_view.AddView()
-    save_load_component = save_load_view.SaveLoadView()
+    save_load_component = save_load_view.SaveLoadView(page, table_container)
+    table_container.save_load_view_ref = save_load_component
     page.add(table_container.main_container)
     page.add(table_container.button_container)
     page.add(add_game_component.input_container)

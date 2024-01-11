@@ -1,7 +1,35 @@
 import flet
+import set_loader, set_saver, common_functions
 
 class SaveLoadView:
-    def __init__(self):
+
+    def load(self, e):
+        try:
+            data = set_loader.Loader.load_set()
+            self.table_container.games = data
+            self.table_container.page = 1
+            common_functions.show_snack_bar(self.page_ref, "Данные загружены!")
+            self.table_container.update_page()
+        except:
+            common_functions.show_snack_bar(self.page_ref, "Не удалось загрузить данные!")
+
+    def save(self, e):
+        try:
+            set_saver.Saver.save_set(self.table_container.games)
+            common_functions.show_snack_bar(self.page_ref, "Данные сохранены!")
+        except:
+            common_functions.show_snack_bar(self.page_ref, "Произошла ошибка при сохранении данных!")
+
+    def check_save_button_availability(self):
+        if len(self.table_container.games) > 0:
+            self.save_button.disabled = False
+        else:
+            self.save_button.disabled = True
+        self.page_ref.update()
+
+    def __init__(self, page, table_container):
+        self.page_ref = page
+        self.table_container = table_container
         self.save_button = flet.ElevatedButton("Сохранить сет матчей", style=flet.ButtonStyle(
                                                        color={
                                                            flet.MaterialState.DEFAULT: flet.colors.BLACK,
@@ -14,7 +42,7 @@ class SaveLoadView:
                                                        padding={
                                                            flet.MaterialState.DEFAULT: 20
                                                        }
-                                                   ), on_click=None)
+                                                   ), on_click=self.save)
         self.load_button = flet.ElevatedButton("Загрузить сет матчей", style=flet.ButtonStyle(
                                                        color={
                                                            flet.MaterialState.DEFAULT: flet.colors.BLACK,
@@ -27,5 +55,6 @@ class SaveLoadView:
                                                        padding={
                                                            flet.MaterialState.DEFAULT: 20
                                                        }
-                                                   ), on_click=None)
+                                                   ), on_click=self.load)
         self.buttons_row = flet.Row(alignment=flet.MainAxisAlignment.CENTER, spacing=200, controls=[self.save_button, self.load_button])
+        self.check_save_button_availability()

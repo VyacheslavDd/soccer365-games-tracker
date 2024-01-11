@@ -3,17 +3,15 @@ import constants
 import save_parser
 
 class Loader:
-    _path = os.path.join(".", "saves")
-
     @classmethod
     def load_set(cls):
-       if not os.path.exists(cls._path):
-        return [list(), list()]
-       files = os.listdir(cls._path)
+       if not os.path.exists(constants.SAVE_PATH):
+        return Exception("Не существует директории с файлом сохранения.")
+       files = os.listdir(constants.SAVE_PATH)
        if not len(files):
-           return [list(), list()]
+           return Exception("Не существует файла сохранения.")
        for file in files:
           if file == constants.SAVE_FILE_TITLE:
-             data = save_parser.Parser.parse_save(os.path.join(cls._path, file))
+             data = save_parser.Parser.parse_save(os.path.join(constants.SAVE_PATH, file))
              return data
-       return [list(), list()]
+       return Exception("Непредвиденная ошибка.")
