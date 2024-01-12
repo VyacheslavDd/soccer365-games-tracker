@@ -1,5 +1,6 @@
 import flet
 import constants
+from threading import Timer
 
 class TableContainer:
     def create_table(self, data):
@@ -38,17 +39,20 @@ class TableContainer:
         return True if self.page * constants.ENTITIES_PER_PAGE >= len(self.games) else False
 
     def remove_entry(self, e, index):
+        self.games[index].timer.cancel()
         del self.games[index]
         for game in self.games[index:]:
             game.row_index -= 1
         self.update_page()
 
-    def update_page(self):
+    def update_page(self, start_new_timer=False):
         self.fill_table()
         self.main_container.content = self.table
         self.previous_button.disabled = self.cannot_decrease_page()
         self.next_button.disabled = self.cannot_increase_page()
         self.page_ref.update()
+        if start_new_timer:
+            Timer(constants.TABLE_UPDATE_TIME, self.update_page, [True]).start()
 
     def change_page(self, increase_by):
         self.page += increase_by
@@ -80,3 +84,4 @@ class TableContainer:
         self.create_pagination_buttons()
         self.pagination_row = flet.Row(spacing=50, alignment=flet.MainAxisAlignment.CENTER, controls=[self.previous_button, self.next_button])
         self.button_container.content = self.pagination_row
+        Timer(constants.TABLE_UPDATE_TIME, self.update_page, [True]).start()

@@ -5,20 +5,22 @@ class SaveLoadView:
 
     def load(self, e):
         try:
+            for game in self.table_container.games:
+                game.timer.cancel()
             data = set_loader.Loader.load_set()
             self.table_container.games = data
             self.table_container.page = 1
             common_functions.show_snack_bar(self.page_ref, "Данные загружены!")
             self.table_container.update_page()
-        except:
-            common_functions.show_snack_bar(self.page_ref, "Не удалось загрузить данные!")
+        except Exception as exc:
+            common_functions.show_snack_bar(self.page_ref, exc)
 
     def save(self, e):
         try:
             set_saver.Saver.save_set(self.table_container.games)
             common_functions.show_snack_bar(self.page_ref, "Данные сохранены!")
-        except:
-            common_functions.show_snack_bar(self.page_ref, "Произошла ошибка при сохранении данных!")
+        except Exception as exc:
+            common_functions.show_snack_bar(self.page_ref, exc)
 
     def check_save_button_availability(self):
         if len(self.table_container.games) > 0:

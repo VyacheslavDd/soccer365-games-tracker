@@ -1,6 +1,7 @@
 import flet
 import constants
 import match
+import re_helper
 
 class Parser:
     @classmethod
@@ -9,11 +10,10 @@ class Parser:
             data = file.readlines()
         game_objects = []
         for line in data:
-            cells_data = line.strip().split('"')
-            cells_data = cells_data[0].split() + cells_data[1:]
-            cells_data[3:] = cells_data[3].split()
+            cells_data = re_helper.RegularExpressionHelper.split_data_row(line)
             if len(cells_data) != constants.TABLE_COLS + 1:
-                return Exception("Некорректные данные.")
+                raise Exception("Некорректные данные.")
             game_class = match.Match(int(cells_data[0]) - 1, cells_data[-1], cells_data[1], cells_data[2], cells_data[3], cells_data[4])
+            game_class.update_data(manual_update=True)
             game_objects.append(game_class)
         return game_objects

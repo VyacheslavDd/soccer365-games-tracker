@@ -9,7 +9,7 @@ def define_page_settings(page):
 def app(page: flet.Page):
     define_page_settings(page)
     table_container = table_view.TableContainer(page, list())
-    add_game_component = add_game_view.AddView()
+    add_game_component = add_game_view.AddView(page, table_container)
     save_load_component = save_load_view.SaveLoadView(page, table_container)
     table_container.save_load_view_ref = save_load_component
     page.add(table_container.main_container)
