@@ -3,11 +3,28 @@ from bs4 import BeautifulSoup as bs
 import datetime
 import re_helper
 import match
+import constants
 
 class GameParser:
     @classmethod
-    def get_game_details(cls, page):
-        return []
+    def get_game_details(cls, home_team, away_team, page):
+        details = []
+        details_list = page.select(".mrgt15 ~ div")
+        for detail in details_list:
+            try:
+                minute = detail.select_one(".event_min").text.strip()
+                team = detail.select_one(".event_ht") if len(detail.select(".event_ht div")) > 0 else detail.select_one(".event_at")
+                team_name = home_team if "ht" in team['class'][0] else away_team
+                player = team.select_one(".img16 span a").text.strip()
+                assistance = team.select_one(".assist")
+                assistance = f"({assistance.text.strip()})" if assistance is not None else ""
+                action = team.select_one(f".{team['class'][0]}_icon")
+                action = constants.ACTION_DICTIONARY[action['class'][1].strip()]
+                detail_string = f"{minute}: {player}, {action} {assistance} ({team_name})"
+                details.append(detail_string)
+            except Exception as e:
+                continue
+        return details
 
     @classmethod
     def _map_data(cls, url, date, home_team, away_team, score, status, details):
@@ -27,7 +44,7 @@ class GameParser:
         score = ":".join([x.text.strip() for x in parsed_data.select(".live_game_goal span")])
         status = parsed_data.select_one(".live_game_status b")
         status = "Не начат" if status is None else (status.text if not re_helper.RegularExpressionHelper.contains_minute(status.text) else f"Идёт: {status.text}")
-        details = cls.get_game_details(parsed_data)
+        details = cls.get_game_details(home_team, away_team, parsed_data)
         if new_game_parse:
             return cls._map_data(url, date, home_team, away_team, score, status, details)
         return [score, status, details]

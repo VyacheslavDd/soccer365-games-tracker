@@ -11,6 +11,7 @@ class Match:
         self.score = score
         self.details = details
         self.row_index = row_index
+        self.timer = None
         if not self.status.startswith(constants.STOP_WORD):
             self.timer = Timer(constants.GAME_NEW_PARSE_TIME, self.update_data)
             self.timer.start()
@@ -21,6 +22,5 @@ class Match:
         self.status = new_data[1]
         self.details = new_data[2]
         if not new_data[1].startswith(constants.STOP_WORD) and not manual_update:
-            print(1)
             self.timer = Timer(constants.GAME_NEW_PARSE_TIME, self.update_data)
             self.timer.start()

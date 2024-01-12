@@ -14,7 +14,8 @@ class TableContainer:
                 flet.DataColumn(flet.Text("Афиша", weight=flet.FontWeight.BOLD)),
                 flet.DataColumn(flet.Text("Статус", weight=flet.FontWeight.BOLD)),
                 flet.DataColumn(flet.Text("Счёт", weight=flet.FontWeight.BOLD)),
-                flet.DataColumn(flet.Text("Действия", weight=flet.FontWeight.BOLD))
+                flet.DataColumn(flet.Text("", weight=flet.FontWeight.BOLD)),
+                flet.DataColumn(flet.Text("", weight=flet.FontWeight.BOLD))
             ],
         )
         rows = []
@@ -26,6 +27,7 @@ class TableContainer:
             cells.append(flet.DataCell(flet.Text(game.title)))
             cells.append(flet.DataCell(flet.Text(game.status)))
             cells.append(flet.DataCell(flet.Text(game.score)))
+            cells.append(flet.DataCell(content=flet.TextButton("Детали матча", on_click=lambda e, i=game.row_index: self.show_details(e, i))))
             cells.append(flet.DataCell(content=flet.TextButton("Удалить", on_click=lambda e, i=game.row_index: self.remove_entry(e, i))))
             row.cells = cells
             rows.append(row)
@@ -38,8 +40,12 @@ class TableContainer:
     def cannot_increase_page(self):
         return True if self.page * constants.ENTITIES_PER_PAGE >= len(self.games) else False
 
+    def show_details(self, e, index):
+        print(self.games[index].details)
+
     def remove_entry(self, e, index):
-        self.games[index].timer.cancel()
+        if self.games[index].timer is not None:
+            self.games[index].timer.cancel()
         del self.games[index]
         for game in self.games[index:]:
             game.row_index -= 1

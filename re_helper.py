@@ -24,7 +24,7 @@ class RegularExpressionHelper:
     
     @classmethod
     def contains_minute(cls, status_line):
-        if len(re.findall(cls._number_pattern, status_line)) > 0:
+        if len(re.findall(cls._number_pattern, status_line)) > 0 and "пенальти" not in status_line:
             return True
         return False
     
