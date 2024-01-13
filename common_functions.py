@@ -1,9 +1,10 @@
 import flet
+import global_helper
 
-def show_snack_bar(page, text):
-    if page.snack_bar is None:
-        page.snack_bar = flet.SnackBar(flet.Text(f"{text}"))
+def show_snack_bar(text):
+    if global_helper.GlobalHelper.page.snack_bar is None:
+        global_helper.GlobalHelper.page.snack_bar = flet.SnackBar(flet.Text(f"{text}"))
     else:
-        page.snack_bar.content = flet.Text(f"{text}")
-    page.snack_bar.open = True
-    page.update()
+        global_helper.GlobalHelper.page.snack_bar.content = flet.Text(f"{text}")
+    global_helper.GlobalHelper.page.snack_bar.open = True
+    global_helper.GlobalHelper.page.update()

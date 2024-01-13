@@ -1,6 +1,8 @@
 import flet
 import constants
 from threading import Timer
+import global_helper
+import common_functions
 
 class TableContainer:
     def create_table(self, data):
@@ -40,15 +42,28 @@ class TableContainer:
     def cannot_increase_page(self):
         return True if self.page * constants.ENTITIES_PER_PAGE >= len(self.games) else False
 
-    def show_details(self, e, index):
-        print(self.games[index].details)
+    def show_details(self, e, index, auto_update=False):
+        try:
+            global_helper.GlobalHelper.details_component.details_list.controls.clear()
+            global_helper.GlobalHelper.details_component.details_list.controls.append(flet.Text(f"События матча {self.games[index].title} ({self.games[index].date}):", weight=flet.FontWeight.BOLD))
+            global_helper.GlobalHelper.details_component.cur_index = index
+            for record in self.games[index].details:
+                global_helper.GlobalHelper.details_component.details_list.controls.append(flet.Text(record))
+            if not auto_update:
+                self.update_page()
+        except:
+            common_functions.show_snack_bar("Ошибка в обновлении событий матча!")
 
     def remove_entry(self, e, index):
+        if global_helper.GlobalHelper.details_component.cur_index == index:
+            global_helper.GlobalHelper.clear_details()
         if self.games[index].timer is not None:
             self.games[index].timer.cancel()
         del self.games[index]
         for game in self.games[index:]:
             game.row_index -= 1
+        if global_helper.GlobalHelper.details_component.cur_index >= index:
+            global_helper.GlobalHelper.details_component.cur_index -= 1
         self.update_page()
 
     def update_page(self, start_new_timer=False):
@@ -56,7 +71,9 @@ class TableContainer:
         self.main_container.content = self.table
         self.previous_button.disabled = self.cannot_decrease_page()
         self.next_button.disabled = self.cannot_increase_page()
-        self.page_ref.update()
+        if global_helper.GlobalHelper.details_component.cur_index != -1:
+            self.show_details(None, global_helper.GlobalHelper.details_component.cur_index, auto_update=True)
+        global_helper.GlobalHelper.page.update()
         if start_new_timer:
             Timer(constants.TABLE_UPDATE_TIME, self.update_page, [True]).start()
 
@@ -74,12 +91,10 @@ class TableContainer:
     def fill_table(self):
         start = (self.page - 1) * constants.ENTITIES_PER_PAGE
         self.table = self.create_table(self.games[start:start + constants.ENTITIES_PER_PAGE])
-        if self.save_load_view_ref is not None:
-            self.save_load_view_ref.check_save_button_availability()
+        if global_helper.GlobalHelper.save_load_component is not None:
+            global_helper.GlobalHelper.save_load_component.check_save_button_availability()
 
-    def __init__(self, page, data):
-        self.page_ref = page
-        self.save_load_view_ref = None
+    def __init__(self, data):
         self.main_container = flet.Container(margin=flet.margin.only(bottom=15))
         self.main_container.alignment = flet.alignment.center
         self.games = data
