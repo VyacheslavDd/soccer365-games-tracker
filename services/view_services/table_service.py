@@ -1,9 +1,9 @@
 import flet
-import global_helper
-import constants
-import sorter
+import services.helpers.global_helper as global_helper
+import common.constants as constants
+import services.sorter as sorter
 from threading import Timer
-import common_functions
+import common.common_functions as common_functions
 
 class TableService:
     def __init__(self, games):

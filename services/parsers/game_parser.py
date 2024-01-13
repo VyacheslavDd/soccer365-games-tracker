@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup as bs
 import datetime
-import re_helper
-import match
-import constants
+import services.helpers.re_helper as re_helper
+import entities.match as match
+import common.constants as constants
 
 class GameParser:
     @classmethod

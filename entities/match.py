@@ -1,6 +1,6 @@
 from threading import Timer
-import game_parser
-import constants
+import services.parsers.game_parser as game_parser
+import common.constants as constants
 
 class Match:
     def __init__(self, row_index, url, date, title, status, score, details=list()):

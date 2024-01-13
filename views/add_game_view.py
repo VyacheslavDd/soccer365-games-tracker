@@ -1,6 +1,6 @@
 import flet
-import common_functions
-import add_game_service
+import common.common_functions as common_functions
+import services.view_services.add_game_service as add_game_service
 
 class AddView:
     def __init__(self):

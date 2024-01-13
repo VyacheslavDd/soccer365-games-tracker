@@ -1,5 +1,5 @@
 import flet
-import global_helper
+import services.helpers.global_helper as global_helper
 
 def show_snack_bar(text):
     if global_helper.GlobalHelper.page.snack_bar is None:

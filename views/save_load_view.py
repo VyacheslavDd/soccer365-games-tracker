@@ -1,6 +1,6 @@
 import flet
-import global_helper
-import save_load_service
+import services.helpers.global_helper as global_helper
+import services.view_services.save_load_service as save_load_service
 
 class SaveLoadView:
     def __init__(self):

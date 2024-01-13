@@ -1,7 +1,7 @@
 import flet
-import constants
-import match
-import re_helper
+import common.constants as constants
+import entities.match as match
+import services.helpers.re_helper as re_helper
 
 class Parser:
     @classmethod

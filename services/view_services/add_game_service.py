@@ -1,7 +1,7 @@
-import global_helper
-import re_helper
-import game_parser
-import common_functions
+import services.helpers.global_helper as global_helper
+import services.helpers.re_helper as re_helper
+import services.parsers.game_parser as game_parser
+import common.common_functions as common_functions
 
 class AddGameService:
     def __init__(self):

@@ -1,4 +1,4 @@
-import table_view, add_game_view, save_load_view, game_details_view
+import views.table_view as table_view, views.add_game_view as add_game_view, views.save_load_view as save_load_view, views.game_details_view as game_details_view
 import flet
 
 class GlobalHelper:

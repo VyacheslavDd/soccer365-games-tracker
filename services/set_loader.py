@@ -1,6 +1,6 @@
 import os
-import constants
-import save_parser
+import common.constants as constants
+import services.parsers.save_parser as save_parser
 
 class Loader:
     @classmethod

@@ -1,5 +1,5 @@
 import datetime
-import constants
+import common.constants as constants
 
 class GameSorter:
     @classmethod

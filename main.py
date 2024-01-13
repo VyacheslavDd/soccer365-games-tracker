@@ -1,5 +1,5 @@
 import flet
-from global_helper import GlobalHelper
+from services.helpers.global_helper import GlobalHelper
 
 
 def define_page_settings(page):

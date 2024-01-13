@@ -1,7 +1,7 @@
 import flet
-import constants
+import common.constants as constants
 from threading import Timer
-import table_service
+import services.view_services.table_service as table_service
 
 class TableContainer:
     def __init__(self, data):
