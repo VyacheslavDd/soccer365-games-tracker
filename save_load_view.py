@@ -1,37 +1,10 @@
 import flet
-import set_loader, set_saver, common_functions
 import global_helper
+import save_load_service
 
 class SaveLoadView:
-
-    def load(self, e):
-        try:
-            for game in global_helper.GlobalHelper.table_container.games:
-                game.timer.cancel()
-            data = set_loader.Loader.load_set()
-            global_helper.GlobalHelper.table_container.games = data
-            global_helper.GlobalHelper.table_container.page = 1
-            global_helper.GlobalHelper.clear_details()
-            common_functions.show_snack_bar("Данные загружены!")
-            global_helper.GlobalHelper.table_container.update_page()
-        except Exception as exc:
-            common_functions.show_snack_bar(exc)
-
-    def save(self, e):
-        try:
-            set_saver.Saver.save_set(global_helper.GlobalHelper.table_container.games)
-            common_functions.show_snack_bar("Данные сохранены!")
-        except Exception as exc:
-            common_functions.show_snack_bar(exc)
-
-    def check_save_button_availability(self):
-        if len(global_helper.GlobalHelper.table_container.games) > 0:
-            self.save_button.disabled = False
-        else:
-            self.save_button.disabled = True
-        global_helper.GlobalHelper.page.update()
-
     def __init__(self):
+        self.service = save_load_service.SaveLoadService()
         self.save_button = flet.ElevatedButton("Сохранить сет матчей", style=flet.ButtonStyle(
                                                        color={
                                                            flet.MaterialState.DEFAULT: flet.colors.BLACK,
@@ -44,7 +17,9 @@ class SaveLoadView:
                                                        padding={
                                                            flet.MaterialState.DEFAULT: 20
                                                        }
-                                                   ), on_click=self.save)
+                                                   ), on_click=lambda _: global_helper.GlobalHelper.file_picker_save.save_file(
+                                                       dialog_title="Сохранение сета", file_name="save.txt", allowed_extensions=['txt']
+                                                   ))
         self.load_button = flet.ElevatedButton("Загрузить сет матчей", style=flet.ButtonStyle(
                                                        color={
                                                            flet.MaterialState.DEFAULT: flet.colors.BLACK,
@@ -57,6 +32,7 @@ class SaveLoadView:
                                                        padding={
                                                            flet.MaterialState.DEFAULT: 20
                                                        }
-                                                   ), on_click=self.load)
+                                                   ), on_click=lambda _: 
+                                                   global_helper.GlobalHelper.file_picker_load.pick_files(allowed_extensions=['txt']))
         self.buttons_row = flet.Row(alignment=flet.MainAxisAlignment.CENTER, spacing=200, controls=[self.save_button, self.load_button])
-        self.check_save_button_availability()
+        self.service.check_save_button_availability(self.save_button)

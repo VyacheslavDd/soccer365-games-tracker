@@ -1,12 +1,12 @@
 import os
 
-SAVE_PATH = os.path.join(".", "saves")
-SAVE_FILE_TITLE = "save.txt"
 TABLE_COLS = 5
 ENTITIES_PER_PAGE = 5
 GAME_NEW_PARSE_TIME = 60
 STOP_WORD = "Завер"
 TABLE_UPDATE_TIME = GAME_NEW_PARSE_TIME / 2
+DATE_FORMAT_STRING = "%d.%m.%Y %H:%M"
+ALTERNATIVE_DATE_FORMAT_STRING = "%d.%m.%Y"
 
 ACTION_DICTIONARY = {
     "live_yellowcard": "Жёлтая карточка",

@@ -3,6 +3,8 @@ import constants
 from threading import Timer
 import global_helper
 import common_functions
+import sorter
+import table_service
 
 class TableContainer:
     def create_table(self, data):
@@ -21,10 +23,11 @@ class TableContainer:
             ],
         )
         rows = []
+        counter = 1
         for game in data:
             row = flet.DataRow()
             cells = []
-            cells.append(flet.DataCell(flet.Text(game.row_index + 1)))
+            cells.append(flet.DataCell(flet.Text(counter)))
             cells.append(flet.DataCell(flet.Text(game.date)))
             cells.append(flet.DataCell(flet.Text(game.title)))
             cells.append(flet.DataCell(flet.Text(game.status)))
@@ -33,6 +36,7 @@ class TableContainer:
             cells.append(flet.DataCell(content=flet.TextButton("Удалить", on_click=lambda e, i=game.row_index: self.remove_entry(e, i))))
             row.cells = cells
             rows.append(row)
+            counter += 1
         table.rows = rows
         return table
     
@@ -90,11 +94,12 @@ class TableContainer:
 
     def fill_table(self):
         start = (self.page - 1) * constants.ENTITIES_PER_PAGE
-        self.table = self.create_table(self.games[start:start + constants.ENTITIES_PER_PAGE])
+        self.table = self.create_table(sorted(self.games[start:start + constants.ENTITIES_PER_PAGE], key=sorter.GameSorter.sort_by_date))
         if global_helper.GlobalHelper.save_load_component is not None:
-            global_helper.GlobalHelper.save_load_component.check_save_button_availability()
+            global_helper.GlobalHelper.save_load_component.service.check_save_button_availability(global_helper.GlobalHelper.save_load_component.save_button)
 
     def __init__(self, data):
+        self.service = table_service.TableService()
         self.main_container = flet.Container(margin=flet.margin.only(bottom=15))
         self.main_container.alignment = flet.alignment.center
         self.games = data
