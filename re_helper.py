@@ -7,10 +7,12 @@ class RegularExpressionHelper:
     _number_pattern = r"\d{1,}"
     _row_split_pattern = r'"([^"]*)"'
     @classmethod
-    def check_game_url(cls, url):
+    def check_game_url(cls, url, raise_exception=True):
         if re.fullmatch(cls._game_url_pattern, url):
-            return
-        raise Exception("Некорректная ссылка!")
+            return True
+        if raise_exception:
+            raise Exception("Некорректная ссылка!")
+        return False
     
     @classmethod
     def find_date(cls, info_line):
