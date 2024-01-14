@@ -1,6 +1,7 @@
 from threading import Timer
 import services.parsers.game_parser as game_parser
 import common.constants as constants
+from services.notifier import Notifier as notifier
 
 class Match:
     def __init__(self, row_index, url, date, title, status, score, details=list()):
@@ -18,6 +19,8 @@ class Match:
 
     def update_data(self, manual_update=False):
         new_data = game_parser.GameParser.parse_game(self.url, new_game_parse=False)
+        if not manual_update:
+            notifier.do_notifications_for_game(self, new_data[0], new_data[1], new_data[2])
         self.score = new_data[0]
         self.status = new_data[1]
         self.details = new_data[2]
