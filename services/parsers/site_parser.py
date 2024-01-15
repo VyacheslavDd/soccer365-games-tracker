@@ -61,7 +61,7 @@ class SiteParser:
                     status = event.select_one(".status")
                 status = status.text.strip()
                 if status.startswith(constants.STOP_WORD):
-                    return
+                    continue
                 game_id = event.select_one(".game_link")['dt-id']
                 url = constants.GAME_PAGE_TEMPLATE.format(game_id)
                 urls.append(url)
