@@ -9,6 +9,8 @@ DATE_FORMAT_STRING = "%d.%m.%Y %H:%M"
 ALTERNATIVE_DATE_FORMAT_STRING = "%d.%m.%Y"
 NOTIFICATION_TIMEOUT_TIME = 3
 RUNNING_MATCH_WORD = "Ид"
+MAIN_PAGE_URL = "https://soccer365.ru/"
+GAME_PAGE_TEMPLATE = "https://soccer365.ru/games/{}/"
 
 ACTION_DICTIONARY = {
     "live_yellowcard": "Жёлтая карточка",

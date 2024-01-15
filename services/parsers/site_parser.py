@@ -5,7 +5,7 @@ import services.helpers.re_helper as re_helper
 import entities.match as match
 import common.constants as constants
 
-class GameParser:
+class SiteParser:
     @classmethod
     def get_game_details(cls, home_team, away_team, page):
         details = []
@@ -48,3 +48,23 @@ class GameParser:
         if new_game_parse:
             return cls._map_data(url, date, home_team, away_team, score, status, details)
         return [score, status, details]
+    
+    @classmethod
+    def parse_main_page_top_games(cls):
+        page = bs(requests.get(constants.MAIN_PAGE_URL).text, 'lxml')
+        today_events = page.select(".block_body_nopadding")[0].select(".game_block")
+        urls = []
+        for event in today_events:
+            try:
+                status = event.select_one(".status span")
+                if status is None:
+                    status = event.select_one(".status")
+                status = status.text.strip()
+                if status.startswith(constants.STOP_WORD):
+                    return
+                game_id = event.select_one(".game_link")['dt-id']
+                url = constants.GAME_PAGE_TEMPLATE.format(game_id)
+                urls.append(url)
+            except:
+                continue
+        return urls
