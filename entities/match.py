@@ -20,7 +20,10 @@ class Match:
     def update_data(self, manual_update=False):
         new_data = site_parser.SiteParser.parse_game(self.url, new_game_parse=False)
         if not manual_update:
-            notifier.do_notifications_for_game(self, new_data[0], new_data[1], new_data[2])
+            try:
+                notifier.do_notifications_for_game(self, new_data[0], new_data[1], new_data[2])
+            except Exception as exc:
+                print(exc)
         self.score = new_data[0]
         self.status = new_data[1]
         self.details = new_data[2]

@@ -5,9 +5,14 @@ import common.constants as constants
 class Notifier:
     @classmethod
     def notify(cls, title, message):
-        notification.notify(title=title, message=message, timeout=constants.NOTIFICATION_TIMEOUT_TIME,
+        try:
+            notification.notify(title=title, message=message, timeout=constants.NOTIFICATION_TIMEOUT_TIME,
                             app_icon=os.path.join("graphic_data", "icons", "soccer_icon.ico"))
-    
+        except Exception as exc:
+            print(exc)
+            notification.notify(title=title, message=message, timeout=constants.NOTIFICATION_TIMEOUT_TIME,
+                                app_icon=os.path.join("_internal", "graphic_data", "icons", "soccer_icon.ico"))
+
     @classmethod
     def do_notifications_for_game(cls, game, score, status, details):
         if game.status != status and not (game.status.startswith("Идёт") and status.startswith("Идёт")):
