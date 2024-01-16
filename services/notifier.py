@@ -1,17 +1,23 @@
-from plyer import notification
+from win10toast import ToastNotifier
 import os
 import common.constants as constants
 
 class Notifier:
+    __notifier = ToastNotifier()
+
     @classmethod
     def notify(cls, title, message):
         try:
-            notification.notify(title=title, message=message, timeout=constants.NOTIFICATION_TIMEOUT_TIME,
-                            app_icon=os.path.join("graphic_data", "icons", "soccer_icon.ico"))
+            cls.__notifier.show_toast(title=title, msg=message, duration=constants.NOTIFICATION_TIMEOUT_TIME,
+                            icon_path=os.path.join("graphic_data", "icons", "soccer_icon.ico"))
         except Exception as exc:
             print(exc)
-            notification.notify(title=title, message=message, timeout=constants.NOTIFICATION_TIMEOUT_TIME,
-                                app_icon=os.path.join("_internal", "graphic_data", "icons", "soccer_icon.ico"))
+            try:
+                cls.__notifier.show_toast(title=title, msg=message, duration=constants.NOTIFICATION_TIMEOUT_TIME,
+                                    icon_path=os.path.join("_internal", "graphic_data", "icons", "soccer_icon.ico"))
+            except Exception as exc:
+                print(exc)
+                cls.__notifier.show_toast(title=title, msg=message, duration=constants.NOTIFICATION_TIMEOUT_TIME)
 
     @classmethod
     def do_notifications_for_game(cls, game, score, status, details):
